@@ -10,7 +10,7 @@ import psycopg
 from pgvector.psycopg import register_vector
 from psycopg import Connection, Cursor, sql
 
-from ..api import VectorDB
+from ..api import VectorDB, MetricType
 from .config import openGaussConfigDict, openGaussIndexConfig
 
 log = logging.getLogger(__name__)
@@ -357,3 +357,11 @@ class openGauss(VectorDB):
         )
 
         return [int(i[0]) for i in result.fetchall()]
+
+    def need_normalize_cosine(self) -> bool:
+        """Wheather this database need to normalize dataset to support COSINE/IP"""
+        if self.case_config.metric_type == MetricType.IP or self.case_config.metric_type == MetricType.COSINE:
+            log.info("current index only supports IP dataset need normalize.")
+            return True
+
+        return False

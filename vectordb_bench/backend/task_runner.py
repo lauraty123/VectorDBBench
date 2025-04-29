@@ -81,7 +81,7 @@ class CaseRunner(BaseModel):
     @property
     def normalize(self) -> bool:
         assert self.db
-        return self.db.need_normalize_cosine() and self.ca.dataset.data.metric_type == MetricType.COSINE
+        return self.db.need_normalize_cosine() and (self.ca.dataset.data.metric_type == MetricType.COSINE or self.ca.dataset.data.metric_type == MetricType.IP)
 
     def init_db(self, drop_old: bool = True) -> None:
         db_cls = self.config.db.init_cls
